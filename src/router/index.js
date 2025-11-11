@@ -13,6 +13,8 @@ import Cart from '@/views/layout/cart.vue'
 import Category from '@/views/layout/category.vue'
 import User from '@/views/layout/user.vue'
 
+import store from '@/store'
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -35,6 +37,25 @@ const router = new VueRouter({
     { path: '/pay', component: Pay },
     { path: '/myorder', component: Myorder }
   ]
+})
+
+// 用数组保存需要登录授权的页面
+const authUrl = ['/pay', '/myorder']
+
+router.beforeEach((to, form, next) => {
+  // 如果不是敏感页面直接放行
+  if (!authUrl.includes(to.path)) {
+    next()
+    return
+  }
+
+  const token = store.getters.token
+  // 如果是敏感页面，先判断是否登录
+  if (token) {
+    next()
+  } else {
+    next('/login')
+  }
 })
 
 export default router
