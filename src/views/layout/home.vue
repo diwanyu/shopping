@@ -62,9 +62,9 @@ export default {
   },
   async created () {
     const { data: { pageData } } = await getHomeData()
-    this.bannerList = pageData.items[1].data
-    this.navList = pageData.items[3].data
-    this.goodsList = pageData.items[6].data
+    this.bannerList = pageData.items[1].data // 获取轮播图数据
+    this.navList = pageData.items[3].data // 获取导航栏数据
+    this.goodsList = pageData.items[6].data // 获取商品数据
   }
 }
 </script>

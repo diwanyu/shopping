@@ -39,7 +39,7 @@
             <span>合计：</span>
             <span>¥ <i class="totalPrice">{{selPrice}}</i></span>
           </div>
-          <div v-if="!isEdit" class="goPay" :class="{disabled : selCount === 0}">结算({{selCount}})</div>
+          <div v-if="!isEdit" class="goPay" :class="{disabled : selCount === 0}" @click="goPay">结算({{selCount}})</div>
           <div @click="delSelect(selCount)" v-else class="delete" :class="{disabled : selCount === 0}">删除</div>
         </div>
       </div>
@@ -62,28 +62,33 @@ export default {
   components: { CountBox },
   data () {
     return {
-      isEdit: false
+      isEdit: false // 是否处于编辑状态
     }
   },
   created () {
+    // 如果用户登录了，就请求购物车列表数据
     if (this.$store.getters.token) {
       this.$store.dispatch('cart/getCartList')
     }
   },
   computed: {
     ...mapState('cart', ['cartList']),
-    ...mapGetters('cart', ['cartTotal', 'selCount', 'selPrice', 'isAllChecked']),
+    ...mapGetters('cart', ['cartTotal', 'selCartList', 'selCount', 'selPrice', 'isAllChecked']),
+    // 判断用户的token
     isLogin () {
       return this.$store.getters.token
     }
   },
   methods: {
+    // 改变商品的选中状态
     toggleCheck (goodsId) {
       this.$store.commit('cart/toggleCheck', goodsId)
     },
+    // 改变所有商品的选中状态
     toggleAllCheck () {
       this.$store.commit('cart/toggleAllCheck', !this.isAllChecked)
     },
+    // 修改购物车商品的数量
     changeCount (goodsNum, goodsId, goodsSkuId) {
       this.$store.dispatch('cart/changeCountactions', {
         goodsNum,
@@ -91,15 +96,29 @@ export default {
         goodsSkuId
       })
     },
+    // 删除选择的商品
     async delSelect (selCount) {
       if (!selCount) {
         return
       }
       await this.$store.dispatch('cart/delSelectactions')
       this.isEdit = false
+    },
+    // 跳转支付页面
+    goPay () {
+      if (this.selCount > 0) {
+        this.$router.push({
+          path: '/pay',
+          query: {
+            mode: 'cart',
+            cartIds: this.selCartList.map(item => item.id).join(',')
+          }
+        })
+      }
     }
   },
   watch: {
+    // 检测是否是编辑状态
     isEdit (value) {
       this.$store.commit('cart/toggleAllCheck', !value)
     }

@@ -37,11 +37,12 @@ export default {
   name: 'SearchIndex',
   data () {
     return {
-      history: getHistoryList(),
-      search: ''
+      history: getHistoryList(), // 历史搜索
+      search: '' // 搜索内容
     }
   },
   methods: {
+    // 搜索
     goSearch (key) {
       if (key === '') {
         this.$toast('搜索不能为空')
@@ -55,9 +56,11 @@ export default {
       if (this.history.length >= 9) {
         this.history = this.history.slice(0, 9)
       }
+      // 跳转至搜索结果页面
       setHistoryList(this.history)
       this.$router.replace(`/searchlist?search=${key}`)
     },
+    // 清空搜索历史
     clearHistory () {
       this.history = []
       setHistoryList(this.history)

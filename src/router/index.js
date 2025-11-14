@@ -42,6 +42,7 @@ const router = new VueRouter({
 // 用数组保存需要登录授权的页面
 const authUrl = ['/pay', '/myorder']
 
+// 前置路由守卫
 router.beforeEach((to, form, next) => {
   // 如果不是敏感页面直接放行
   if (!authUrl.includes(to.path)) {

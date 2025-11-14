@@ -40,11 +40,12 @@ export default {
   },
   data () {
     return {
-      list: [],
-      activeIndex: 0
+      list: [], // 分类列表
+      activeIndex: 0 // 分类数
     }
   },
   methods: {
+    // 请求分类列表
     async getCategoryList () {
       const { data: { list } } = await getCategoryData()
       this.list = list

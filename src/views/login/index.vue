@@ -92,6 +92,7 @@ export default {
         }, 1000)
       }
     },
+    // 登录
     async login () {
       if (!this.verifyfn()) {
         return

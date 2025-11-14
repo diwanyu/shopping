@@ -11,11 +11,12 @@ export default {
   name: 'CountBox',
   props: {
     value: {
-      type: Number,
-      default: 1
+      type: Number, // 数量只能为Number类型
+      default: 1 // 默认值为1
     }
   },
   methods: {
+    // 数量减一
     handleSub () {
       if (this.value > 0) {
         this.$emit('input', this.value - 1)
@@ -23,9 +24,11 @@ export default {
         this.$toast('数量不能小于0')
       }
     },
+    // 数量加一
     handleAdd () {
       this.$emit('input', this.value + 1)
     },
+    // 显示数量
     handleChange (e) {
       const num = +e.target.value
       if (isNaN(num) || num < 1) {

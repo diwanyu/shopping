@@ -4,7 +4,7 @@ import { Toast } from 'vant'
 export default {
   namespaced: true,
   state: {
-    cartList: []
+    cartList: [] // 购物车列表
   },
   actions: {
     // 请求cart数据并为每一个商品添加isChecked属性
@@ -15,7 +15,7 @@ export default {
       })
       context.commit('setCartList', list)
     },
-    //  请求更新cart商品的数量
+    //  请求修改cart商品的数量
     async changeCountactions (context, { goodsNum, goodsId, goodsSkuId }) {
       context.commit('setCartCount', { goodsId, goodsNum })
       await changeCount(goodsId, goodsNum, goodsSkuId)

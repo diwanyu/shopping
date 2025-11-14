@@ -99,8 +99,8 @@
           <CountBox v-model="addCount"></CountBox>
         </div>
         <div class="showbtn" v-if="true">
-          <div class="btn" @click="addCart" v-if="true">加入购物车</div>
-          <div class="btn now" v-else>立刻购买</div>
+          <div class="btn" @click="addCart" v-if="mode === 'cart'">加入购物车</div>
+          <div class="btn now" @click="goPay" v-else>立刻购买</div>
         </div>
         <div class="btn-none" v-else>该商品已抢完</div>
       </div>
@@ -113,8 +113,10 @@ import { getProDetail, getProComment } from '@/api/product'
 import { addCart } from '@/api/cart'
 import defaultImg from '@/assets/default-avatar.png'
 import CountBox from '@/components/CountBox.vue'
+import loginConfilm from '@/mixins/loginConfilm'
 export default {
   name: 'ProDetail',
+  mixins: [loginConfilm],
   components: { CountBox },
   data () {
     return {
@@ -157,33 +159,34 @@ export default {
       this.list = list
       this.total = total
     },
+    // 弹购物车
     addfn () {
       this.showPannel = true
       this.mode = 'cart'
     },
+    // 弹立即购买
     buyfn () {
       this.showPannel = true
       this.mode = 'buy'
     },
+    // 去订单页面
+    goPay () {
+      if (this.addCount >= 1 && !this.loginConfilm()) {
+        this.$router.push({
+          path: '/pay',
+          query: {
+            mode: 'buyNow',
+            goodsId: this.goodsId,
+            goodsNum: this.addCount,
+            goodsSkuId: this.detail.skuList[0].goods_sku_id
+          }
+        })
+      }
+    },
     // 添加购物车
     async addCart () {
-      // 判断用户是否有登录
-      if (!this.$store.getters.token) {
-        this.$dialog.confirm({
-          title: '温馨提示',
-          message: '此时需要先登录才能继续操作哦',
-          confirmButtonText: '去登录',
-          cancelButtonText: '再逛逛'
-        })
-          .then(() => {
-            this.$router.replace({
-              path: '/login',
-              query: {
-                backUrl: this.$route.fullPath
-              }
-            })
-          })
-          .catch(() => {})
+      // 判断是否需要弹出登录框
+      if (this.loginConfilm()) {
         return
       }
       const { data } = await addCart(this.goodsId, this.addCount, this.detail.skuList[0].goods_sku_id)

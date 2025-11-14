@@ -38,16 +38,18 @@ export default {
   },
   data () {
     return {
-      page: 1,
-      proList: []
+      page: 1, // 搜索结果分页数
+      proList: [] // 搜索结果
     }
   },
   computed: {
+    // 搜索内容
     querySearch () {
       return this.$route.query.search
     }
   },
   async created () {
+    // 请求搜索结果
     const { data: { list } } = await getProList({
       categoryId: this.$route.query.categoryId,
       goodsName: this.querySearch,
