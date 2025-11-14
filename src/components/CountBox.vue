@@ -17,7 +17,11 @@ export default {
   },
   methods: {
     handleSub () {
-      this.$emit('input', this.value - 1)
+      if (this.value > 0) {
+        this.$emit('input', this.value - 1)
+      } else {
+        this.$toast('数量不能小于0')
+      }
     },
     handleAdd () {
       this.$emit('input', this.value + 1)
