@@ -7,7 +7,7 @@
         <p>未注册的手机号登录后将自动注册</p>
       </div>
 
-      <div class="form">
+      <div :class="form">
         <div class="form-item">
           <input v-model="mobile" class="inp" maxlength="11" placeholder="请输入手机号码" type="text">
         </div>
@@ -42,7 +42,8 @@ export default {
       totalSecond: 60, // 请求短信验证码的总秒数
       timer: null, // 保存定时器
       mobile: '', // 储存手机号
-      msgCode: '' // 储存短信验证码
+      msgCode: '', // 储存短信验证码
+      form: 'form'
     }
   },
   async created () {
